@@ -443,7 +443,7 @@ echo.
 echo  4. Copy all of the apks ^& jars from the rom you're working with into the 'files_in' folder 
 echo     of the project folder for the rom.
 echo.
-echo  5. Use the menu to select APK ^& JAR Tasks and execute them.
+echo  5. Use the menu to select tasks and execute them.
 echo.
 echo  NOTES
 echo.
