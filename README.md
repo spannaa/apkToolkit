@@ -35,7 +35,7 @@ private.pk8 keys in the 'tools' folder  with your own and then edit line 392 in
 Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 
 This tool currently uses apktool_2.2.0.jar. To switch to a different apktool_2.0.X.jar
-version, just copy it into the 'tools' folder and rename it apktool.jar
+version, just copy it into the 'tools' folder and rename it 'apktool.jar'
 
 The default compression level is '9', The default maximum memory (heap) size is '512mb 
 These should not need to be changed unless there is aproblem with decompiling/compiling.
