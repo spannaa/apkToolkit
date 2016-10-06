@@ -5,7 +5,7 @@ if (%1)==(0) goto SkipMe
 echo ------------------------------------------------------------------------------ >> log.txt
 echo ^|%date% -- %time%^| >> log.txt
 echo ------------------------------------------------------------------------------ >> log.txt
-ApkToolkit 0 2>> log.txt
+apkToolkit 0 2>> log.txt
 
 :SkipMe
 mode con:cols=94 lines=64
