@@ -478,7 +478,7 @@ echo.
 echo  This tool currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
 echo  one of the apktool_2.0.X.jar files in the 'tools' folder to apktool.jar
 echo.
-echo  The default compression level is '9', The default maximum memory (heap) size is '512mb 
+echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
 echo.
 echo  --------------------------------------------------------------------------------------------
