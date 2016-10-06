@@ -288,11 +288,7 @@ echo   Is this a system apk ^(y/n^)
 echo.
 set /P INPUT=- Type input: %=%
 if %INPUT%==y (call :Signatures) else (call :NoSignatures)
-echo.
-echo - Press any key to continue...
-pause > nul
-cd ..
-goto ReStart
+goto Pause
 
 REM Signatures function
 :Signatures
@@ -374,11 +370,7 @@ if errorlevel 1 goto Level1Error
 del /Q "%~dp0%projectFolder%\files_out\files_out\unsigned_%currentApp%"
 echo.
 echo   The test_signed_%currentApp% can be found in your %projectFolder%\files_out folder
-echo.
-echo - Press any key to continue...
-pause > nul
-cd ..
-goto ReStart
+goto Pause
 
 :SignApkRelease
 cd tools
@@ -395,11 +387,7 @@ if errorlevel 1 goto Level1Error
 del /Q "%~dp0%projectFolder%\files_out\files_out\unsigned_%currentApp%"
 echo.
 echo   The release_signed_%currentApp% can be found in your %projectFolder%\files_out folder
-echo.
-echo - Press any key to continue...
-pause > nul
-cd ..
-goto ReStart
+goto Pause
 
 :ZipAlignApk
 cd tools
@@ -408,26 +396,21 @@ echo   Zipaligning %currentApp%
 if exist "%~dp0%projectFolder%\files_out\test_signed_%currentApp%" zipalign -f 4 "%~dp0%projectFolder%\files_out\test_signed_%currentApp%" "%~dp0%projectFolder%\files_out\test_signed_aligned_%currentApp%"
 if exist "%~dp0%projectFolder%\files_out\release_signed_%currentApp%" zipalign -f 4 "%~dp0%projectFolder%\files_out\release_signed_%currentApp%" "%~dp0%projectFolder%\files_out\release_signed_aligned_%currentApp%"
 if exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" zipalign -f 4 "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" "%~dp0%projectFolder%\files_out\unsigned_aligned_%currentApp%"
-REM if exist "%~dp0%projectFolder%\files_out\%currentApp%" zipalign -f 4 "%~dp0%projectFolder%\files_out\%currentApp%" "%~dp0%projectFolder%\files_out\aligned_%currentApp%"
+if exist "%~dp0%projectFolder%\files_out\%currentApp%" zipalign -f 4 "%~dp0%projectFolder%\files_out\%currentApp%" "%~dp0%projectFolder%\files_out\aligned_%currentApp%"
 if errorlevel 1 goto Level1Error
 )
 del /Q "%~dp0%projectFolder%\files_out\test_signed_%currentApp%"
 del /Q "%~dp0%projectFolder%\files_out\release_signed_%currentApp%"
 del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%"
-REM del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
+del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
 echo.
 echo   The aligned %currentApp% can be found in your %projectFolder%\files_out folder
-echo.
-echo - Press any key to continue...
-pause > nul
-cd ..
+goto Pause
 
 :ClearFrameworks
-echo   Clearing Frameworks
+echo   Clearing Frameworks...
 rmdir /S /Q %userprofile%\apktool > nul
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :SetCompression
 set /P INPUT=- Enter Compression Level (0-9) : %=%
@@ -472,11 +455,11 @@ echo  Any number of self-contained project folders can be created and worked wit
 echo  project folder can contain any number of apks ^& jars.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 392 in 
+echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 384 in 
 echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 echo.
-echo  This tool currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
-echo  one of the apktool_2.0.X.jar files in the 'tools' folder to apktool.jar
+echo  The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
+echo  one of the apktool_2.0.X.jar files in the 'tools' folder to 'apktool.jar'
 echo.
 echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
