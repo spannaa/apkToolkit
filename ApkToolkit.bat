@@ -475,8 +475,8 @@ echo  To sign apks with your own release keys, replace the dummy cert.x509.pem a
 echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 392 in 
 echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 echo.
-echo  This tool currently uses apktool_2.2.0.jar. To switch to a different apktool_2.0.X.jar
-echo  version, just copy it into the 'tools' folder and rename it apktool.jar
+echo  This tool currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
+echo  one of the apktool_2.0.X.jar files in the 'tools' folder to apktool.jar
 echo.
 echo  The default compression level is '9', The default maximum memory (heap) size is '512mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
@@ -484,77 +484,53 @@ echo.
 echo  --------------------------------------------------------------------------------------------
 goto Pause
 
-:Pause
-echo.
-echo - Press any key to continue...
-pause > nul
-goto Restart
-
 REM Error messages
 :NotDecompiledError
 echo.
 echo   %currentApp% has not been decompiled, please do so before doing attempting this
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :NoneDecompiledError
 echo.
 echo   There are no decompiled apps in the %projectFolder%\working folder^^!
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :NoAppsError
 echo.
 echo   There are no apks or jars in the %projectFolder%\files_in folder^^!
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :ProjectSelectError
 set projectFolder=None
 echo.
 echo   You selected a number that wasn't one of the options^^!
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :FileSelectError
 set currentApp=None
 echo.
 echo   You selected a number that wasn't one of the options^^!
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :JavaError
 echo.
 echo   Java was not found, you will not be able to sign apks or use apktool
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :SigningError
 echo.
 echo   There is no unsigned_%currentApp% available to sign
-echo.
-echo - Press any key to continue...
-pause > nul
-goto ReStart
+goto Pause
 
 :Level1Error
 echo.
 echo   "An Error Occured, Please Check Your log.txt "
+goto Pause
+
+:Pause
 echo.
 echo - Press any key to continue...
 pause > nul
-goto ReStart
+goto Restart
 
 :Quit
