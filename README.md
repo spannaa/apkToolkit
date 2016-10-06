@@ -19,7 +19,7 @@ SETUP
 4. Copy all of the apks & jars from the rom you're working with into the 'files_in' folder 
    of the project folder for the rom.
 
-5. Use the menu to select APK & JAR Tasks and execute them.
+5. Use the menu to select tasks and execute them.
 
 
 NOTES
