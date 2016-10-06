@@ -31,7 +31,7 @@ Any number of self-contained project folders can be created and worked with and 
 project folder can contain any number of apks & jars.
 
 To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-private.pk8 keys in the 'tools' folder  with your own and then edit line 392 in 
+private.pk8 keys in the 'tools' folder  with your own and then edit line 384 in 
 Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 
 The toolkit currently uses apktool_2.2.0.jar. To switch to a different apktool_2.0.X.jar
