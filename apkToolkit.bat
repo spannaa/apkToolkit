@@ -106,6 +106,9 @@ if %menunr%==12 (goto SetCompression)
 if %menunr%==13 (goto MaxMemorySize)
 if %menunr%==14 (goto Help)
 if %menunr%==15 (goto Quit)
+REM If an out of range number is entered, redirect to OutOfRangeError
+if %menunr%==0 (goto OutOfRangeError)
+if %menunr% GTR 15 (goto OutOfRangeError)
 
 :ProjectFolderSelect
 echo.
@@ -468,6 +471,11 @@ echo  --------------------------------------------------------------------------
 goto Pause
 
 REM Error messages
+:OutOfRangeError
+echo.
+echo   You selected a number that wasn't one of the options^^!
+goto Pause
+
 :NotDecompiledError
 echo.
 echo   %currentApp% has not been decompiled, please do so before doing attempting this
