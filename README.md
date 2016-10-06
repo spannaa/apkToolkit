@@ -4,6 +4,7 @@ Toolkit for working with apks &amp; jars within multiple projects
 
 APK TOOLKIT HELP
 
+
 SETUP
 
 1. Java MUST be installed for this tool to work. Java 7 (JRE 1.7) is recommended.
@@ -18,6 +19,7 @@ SETUP
    of the project folder for the rom.
 
 5. Use the menu to select APK & JAR Tasks and execute them.
+
 
 NOTES
 
