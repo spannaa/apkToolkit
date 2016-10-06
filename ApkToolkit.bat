@@ -490,7 +490,6 @@ echo - Press any key to continue...
 pause > nul
 goto Restart
 
-
 REM Error messages
 :NotDecompiledError
 echo.
