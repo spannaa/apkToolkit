@@ -21,14 +21,14 @@ for /D %%D in (*) do if /I not "%%~nxD"=="tools" (
 set /A projectcount+=1
 set tmpstore1=%%~nD%%~xD
 )
-if %projectcount%==1 (set projectFolder=%tmpstore1%)
+if %projectcount%==1 set projectFolder=%tmpstore1%
 REM Check if there is only one apk/jar in the projectFolder\files_in folder - if there is, set it as 'currentApp'
 set /A filecount=0
 for %%F in (%projectFolder%/files_in/*.apk, %projectFolder%/files_in/*.jar) do (
 set /A filecount+=1
 set tmpstore2=%%~nF%%~xF
 )
-if %filecount%==1 (set currentApp=%tmpstore2%)
+if %filecount%==1 set currentApp=%tmpstore2%
 
 :ReStart
 cd "%~dp0"
@@ -91,24 +91,24 @@ echo.
 echo  --------------------------------------------------------------------------------------------
 echo.
 set /P menunr=- Please select your option: 
-if %menunr%==1 (goto ProjectFolderSelect)
-if %menunr%==2 (goto CreateProjectFolder)
-if %menunr%==3 (goto FileSelect)
-if %menunr%==4 (goto DecompileUserApk)
-if %menunr%==5 (goto DecompileSystemApk)
-if %menunr%==6 (goto DecompileAll)
-if %menunr%==7 (goto CompileApkOrJar)
-if %menunr%==8 (goto CompileAll)
-if %menunr%==9 (goto SignApkTest)
-if %menunr%==10 (goto SignApkRelease)
-if %menunr%==11 (goto ZipAlignApk)
-if %menunr%==12 (goto SetCompression)
-if %menunr%==13 (goto MaxMemorySize)
-if %menunr%==14 (goto Help)
-if %menunr%==15 (goto Quit)
+if %menunr%==1 goto ProjectFolderSelect
+if %menunr%==2 goto CreateProjectFolder
+if %menunr%==3 goto FileSelect
+if %menunr%==4 goto DecompileUserApk
+if %menunr%==5 goto DecompileSystemApk
+if %menunr%==6 goto DecompileAll
+if %menunr%==7 goto CompileApkOrJar
+if %menunr%==8 goto CompileAll
+if %menunr%==9 goto SignApkTest
+if %menunr%==10 goto SignApkRelease
+if %menunr%==11 goto ZipAlignApk
+if %menunr%==12 goto SetCompression
+if %menunr%==13 goto MaxMemorySize
+if %menunr%==14 goto Help
+if %menunr%==15 goto Quit
 REM If an out of range number is entered, redirect to OutOfRangeError
-if %menunr%==0 (goto OutOfRangeError)
-if %menunr% GTR 15 (goto OutOfRangeError)
+if %menunr%==0 goto OutOfRangeError
+if %menunr% GTR 15 goto OutOfRangeError
 
 :ProjectFolderSelect
 echo.
@@ -127,13 +127,13 @@ set /A count=0
 for /D %%D in (*) do if /I not "%%~nxD"=="tools" (
 set /A count+=1
 set a!count!=%%D
-if /I !count! LEQ 9 (echo    !count!.  %%D )
-if /I !count! GTR 9 (echo   !count!.  %%D )
+if /I !count! LEQ 9 echo    !count!.  %%D
+if /I !count! GTR 9 echo   !count!.  %%D
 )
 echo.
 set /P INPUT=- Enter its number: %=%
-if /I %INPUT% GTR !count! (goto ProjectSelectError)
-if /I %INPUT% LSS 1 (goto ProjectSelectError)
+if /I %INPUT% GTR !count! goto ProjectSelectError
+if /I %INPUT% LSS 1 goto ProjectSelectError
 set projectFolder=!a%INPUT%!
 goto ReStart
 
@@ -144,7 +144,7 @@ echo.
 set /P INPUT=- Enter the folders name : %=%
 set projectFolder= %INPUT: =_%
 REM Create projectFolder and sub folders
-if not exist "%INPUT%" (mkdir "%INPUT: =_%", "%INPUT: =_%\frameworks", "%INPUT: =_%\files_in", "%INPUT: =_%\files_out", "%INPUT: =_%\working")
+if not exist "%INPUT%" mkdir "%INPUT: =_%", "%INPUT: =_%\frameworks", "%INPUT: =_%\files_in", "%INPUT: =_%\files_out", "%INPUT: =_%\working"
 goto ReStart
 
 :FileSelect
@@ -163,14 +163,14 @@ set /A count=0
 for %%F in (%projectFolder%/files_in/*.apk, %projectFolder%/files_in/*.jar) do (
 set /A count+=1
 set a!count!=%%F
-if /I !count! LEQ 9 (echo    !count!.  %%F )
-if /I !count! GTR 9 (echo   !count!.  %%F )
+if /I !count! LEQ 9 echo    !count!.  %%F 
+if /I !count! GTR 9 echo   !count!.  %%F 
 )
-if %count%==0 (goto NoAppsError)
+if %count%==0 goto NoAppsError
 echo.
 set /P INPUT=- Enter its number: %=%
-if /I %INPUT% GTR !count! (goto FileSelectError)
-if /I %INPUT% LSS 1 (goto FileSelectError)
+if /I %INPUT% GTR !count! goto FileSelectError
+if /I %INPUT% LSS 1 goto FileSelectError
 set currentApp=!a%INPUT%!
 goto ReStart
 
@@ -188,7 +188,7 @@ echo.
 echo   You need to select an apk or jar to work on first^^!
 goto Pause
 )
-if exist "%~dp0%projectFolder%\working\%currentApp%" (rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%")
+if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
 echo.
 echo   Decompiling %currentApp% ...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
@@ -220,9 +220,8 @@ echo   Installing framework: %%F ...
 java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
-)
 echo.
-if exist "%~dp0%projectFolder%\working\%currentApp%" (rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%")
+if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
 echo   Decompiling %currentApp% ...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
 if errorlevel 1 goto Level1Error
@@ -247,19 +246,17 @@ echo   Installing framework: %%F ...
 java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
-)
 echo.
 REM use counter to check if there are any apps to decompile and redirect to error if not
 set /A count=0
 for %%F in (../%projectFolder%/files_in/*.apk ../%projectFolder%/files_in/*.jar) do (
 set /A count+=1
-if exist "%~dp0%projectFolder%\working\%%F" (rmdir /S /Q "%~dp0%projectFolder%\working\%%F")
+if exist "%~dp0%projectFolder%\working\%%F" rmdir /S /Q "%~dp0%projectFolder%\working\%%F"
 echo   Decompiling %%F ...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%%F" -b -o "..\%projectFolder%\working\%%F" > nul
 if errorlevel 1 goto Level1Error
 )
-)
-if %count%==0 (goto NoAppsError)
+if %count%==0 goto NoAppsError
 echo.
 echo   All decompiled apks ^& jars can be found in your %projectFolder%\working folder
 goto Pause
@@ -281,16 +278,17 @@ goto Pause
 echo.
 if not exist "%~dp0%projectFolder%\working\%currentApp%" goto NotDecompiledError
 REM If currentApp's build folder exists, delete it before compiling
-if exist "%~dp0%projectFolder%\working\%currentApp%\build" (rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%\build")
+if exist "%~dp0%projectFolder%\working\%currentApp%\build" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%\build"
 echo   Compiling %currentApp% ...
-if exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" (del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%")
+if exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%"
 java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%currentApp%" -o "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 echo.
 echo   Is this a system apk ^(y/n^)
 echo.
 set /P INPUT=- Type input: %=%
-if %INPUT%==y (call :Signatures) else (call :NoSignatures)
+if %INPUT%==y (call :Signatures
+) else (call :NoSignatures)
 goto Pause
 
 REM Signatures function
@@ -303,7 +301,7 @@ echo.
 echo  --------------------------------------------------------------------------------------------
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
-if exist "%~dp0%projectFolder%\files_out\%currentApp%" (del /Q "%~dp0%projectFolder%\files_out\%currentApp%")
+if exist "%~dp0%projectFolder%\files_out\%currentApp%" del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
 ren "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" "%currentApp%"
 echo.
 echo   The compiled %currentApp% with the original signatures 
@@ -332,13 +330,18 @@ set /A count=0
 REM If decompiled apk's build folder exists, delete it before compiling
 for /D %%D in (../%projectFolder%/working/*.apk ../%projectFolder%/working/*.jar) do (
 set /A count+=1
-if exist "%~dp0%projectFolder%\working\%%D\build" (rmdir /S /Q "%~dp0%projectFolder%\working\%%D\build")
+if exist "%~dp0%projectFolder%\working\%%D\build" rmdir /S /Q "%~dp0%projectFolder%\working\%%D\build"
 REM Compile the apks & jars...
 echo.
 echo   Compiling %%D ...
-if exist "%~dp0%projectFolder%\files_out\unsigned_%%D" (del /Q "%~dp0%projectFolder%\files_out\unsigned_%%D")
+if exist "%~dp0%projectFolder%\files_out\unsigned_%%D" del /Q "%~dp0%projectFolder%\files_out\unsigned_%%D"
 java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%%D" -o "%~dp0%projectFolder%\files_out\unsigned_%%D" > nul
-if errorlevel 1 goto Level1Error
+REM If errorlevel 1 occurs, show an error message and pause
+if errorlevel 1 (echo   There was an error compiling %%D - please Check Your log.txt
+echo.
+echo - Press any key to continue...
+pause > nul
+) else (
 REM Copy the original signatures to the compiled apks & jars...
 echo   Copying original signatures to %%D ...
 echo.
@@ -349,10 +352,11 @@ echo.
 echo  --------------------------------------------------------------------------------------------
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
-if exist "%~dp0%projectFolder%\files_out\%%D" (del /Q "%~dp0%projectFolder%\files_out\%%D")
+if exist "%~dp0%projectFolder%\files_out\%%D" del /Q "%~dp0%projectFolder%\files_out\%%D"
 ren "%~dp0%projectFolder%\files_out\unsigned_%%D" "%%D"
 )
-if %count%==0 (goto NoneDecompiledError)
+)
+if %count%==0 goto NoneDecompiledError
 echo.
 echo   All compiled apks ^& jars with their original signatures 
 echo   can be found in your %projectFolder%\files_out folder
@@ -363,7 +367,7 @@ cd tools
 REM Check that there is an unsigned currentApp avaialable to sign and redirect to error if not
 if not exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" goto SigningError
 REM Delete any existing unsigned currentApp before proceeding
-if exist "%~dp0%projectFolder%\files_out\test_signed_%currentApp%" (del /Q "%~dp0%projectFolder%\files_out\test_signed_%currentApp%")
+if exist "%~dp0%projectFolder%\files_out\test_signed_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\test_signed_%currentApp%"
 echo.
 echo   Signing %currentApp% with test keys
 java -Xmx%heapy%m -jar signapk.jar -w testkey.x509.pem testkey.pk8 ..\%projectFolder%\files_out\unsigned_%currentApp% ..\%projectFolder%\files_out\test_signed_%currentApp%
@@ -379,7 +383,7 @@ cd tools
 REM Check that there is an unsigned currentApp avaialable to sign and redirect to error if not
 if not exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" goto SigningError
 REM Delete any existing unsigned currentApp before proceeding
-if exist "%~dp0%projectFolder%\files_out\release_signed_%currentApp%" (del /Q "%~dp0%projectFolder%\files_out\release_signed_%currentApp%")
+if exist "%~dp0%projectFolder%\files_out\release_signed_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\release_signed_%currentApp%"
 echo.
 echo   Signing %currentApp% with release keys
 REM rename cert.x509.pem and private.pk8 to reflect the filenames of your own release keys in the tools folder
@@ -514,7 +518,7 @@ goto Pause
 
 :Level1Error
 echo.
-echo   "An Error Occured, Please Check Your log.txt "
+echo   An error Occured - please Check Your log.txt
 goto Pause
 
 :Pause
