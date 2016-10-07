@@ -135,6 +135,13 @@ set /P INPUT=- Enter its number: %=%
 if /I %INPUT% GTR !count! goto ProjectSelectError
 if /I %INPUT% LSS 1 goto ProjectSelectError
 set projectFolder=!a%INPUT%!
+REM Count the number of apps in projectFolder and, if there is only one, set it as currentApp
+set /A count=0
+for %%F in (!a%INPUT%!/files_in/*.apk, !a%INPUT%!/files_in/*.jar) do (
+set /A count+=1
+set a!count!=%%F
+)
+if %count%==1 set currentApp=!a%INPUT%!
 goto ReStart
 
 :CreateProjectFolder
