@@ -1,6 +1,13 @@
 # apkToolkit
 
-A toolkit for working with apks &amp; jars within multiple projects
+A toolkit for working with apks &amp; jars within multiple projects.
+
+Any number of self-contained project folders can be created and worked with and each 
+project folder can contain any number of apks & jars.
+
+When decompiling or batch decompiling apks & jars, any previously installed frameworks 
+are deleted and the frameworks for the project you're working in are installed automatically.
+This enables different roms to be worked on without their frameworks getting mixed up.
 
 WHAT IT CAN DO
 
@@ -26,23 +33,3 @@ SETUP
    of the project folder for the rom.
 
 5. Use the menu to select tasks and execute them.
-
-
-NOTES
-
-When decompiling or batch decompiling apks & jars, any previously installed frameworks 
-are deleted and the frameworks for the project you're working in are installed automatically.
-This enables different roms to be worked on without their frameworks getting mixed up.
-
-Any number of self-contained project folders can be created and worked with and each 
-project folder can contain any number of apks & jars.
-
-To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-private.pk8 keys in the 'tools' folder  with your own and then edit line 390 in 
-Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
-
-The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, copy any 
-apktool_2.0.X.jar version into the 'tools' folder and rename it 'apktool.jar'
-
-The default compression level is '9', The default maximum memory (heap) size is '512'mb 
-These should not need to be changed unless there is aproblem with decompiling/compiling.
