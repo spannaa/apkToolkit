@@ -461,7 +461,7 @@ echo  Any number of self-contained project folders can be created and worked wit
 echo  project folder can contain any number of apks ^& jars.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 383 in 
+echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 390 in 
 echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
