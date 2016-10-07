@@ -37,7 +37,7 @@ cls
 echo.
 echo   APK TOOLKIT
 echo.   
-echo   Spannaa @ XDA (Based on Apk Manager by Daneshm90 @ XDA)
+echo   Spannaa @ XDA
 echo.
 echo  --------------------------------------------------------------------------------------------
 echo   Compression Level: %compression%   ^|  Java Heap Size: %heapy%mb
@@ -84,7 +84,7 @@ echo   12.  Select compression level for apks ^& jars
 echo.
 echo   13.  Set Max Memory Size (Only use if getting stuck at decompiling/compiling)
 echo.
-echo   14.  Help
+echo   14.  Setup, notes ^& credits
 echo.
 echo   15.  Quit
 echo.
@@ -433,7 +433,7 @@ goto ReStart
 :Help
 cls
 echo.
-echo  APK TOOLKIT HELP
+echo  APK TOOLKIT
 echo  --------------------------------------------------------------------------------------------
 echo.
 echo  SETUP
@@ -469,6 +469,12 @@ echo  one of the apktool_2.0.X.jar files in the 'tools' folder to 'apktool.jar'
 echo.
 echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
+echo.
+echo  CREDITS
+echo.
+echo  apkToolkit is based on Apk Manager: Daneshm90 @ XDA
+echo  apktool.jar: iBotPeaches @ XDA & Brut.all @ XDA
+echo  7za standalone command line version of 7-Zip: Igor Pavlov
 echo.
 echo  --------------------------------------------------------------------------------------------
 goto Pause
@@ -518,7 +524,7 @@ goto Pause
 
 :Level1Error
 echo.
-echo   An error occurred - please check your log.txt
+echo   An error Occured - please check your log.txt
 goto Pause
 
 :Pause
