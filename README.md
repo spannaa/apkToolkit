@@ -4,13 +4,13 @@ A toolkit for working with apks &amp; jars within multiple projects
 
 WHAT IT CAN DO
 
-   Decompile
-   Batch decompile
-   Compile 
-   Batch compile keeping the original signatures
-   Sign with test keys
-   Sign with release keys
-   Zipalign (after compiling & signing)
+  - Decompile
+  - Batch decompile
+  - Compile 
+  - Batch compile keeping the original signatures
+  - Sign with test keys
+  - Sign with release keys
+  - Zipalign (after compiling & signing)
 
 SETUP
 
