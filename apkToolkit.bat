@@ -518,7 +518,7 @@ goto Pause
 
 :Level1Error
 echo.
-echo   An error Occured - please check your log.txt
+echo   An error occurred - please check your log.txt
 goto Pause
 
 :Pause
