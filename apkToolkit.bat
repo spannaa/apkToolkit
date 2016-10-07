@@ -294,11 +294,8 @@ goto Pause
 REM Signatures function
 :Signatures
 echo.
-echo  --------------------------------------------------------------------------------------------
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r
-echo.
-echo  --------------------------------------------------------------------------------------------
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > nul
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%currentApp%" del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
@@ -333,7 +330,7 @@ set /A count+=1
 if exist "%~dp0%projectFolder%\working\%%D\build" rmdir /S /Q "%~dp0%projectFolder%\working\%%D\build"
 REM Compile the apks & jars...
 echo.
-echo   Compiling %%D ...
+echo   Compiling %%D...
 if exist "%~dp0%projectFolder%\files_out\unsigned_%%D" del /Q "%~dp0%projectFolder%\files_out\unsigned_%%D"
 java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%%D" -o "%~dp0%projectFolder%\files_out\unsigned_%%D" > nul
 REM If errorlevel 1 occurs, show an error message and pause
@@ -343,13 +340,9 @@ echo - Press any key to continue...
 pause > nul
 ) else (
 REM Copy the original signatures to the compiled apks & jars...
-echo   Copying original signatures to %%D ...
-echo.
-echo  --------------------------------------------------------------------------------------------
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r
-echo.
-echo  --------------------------------------------------------------------------------------------
+echo   Copying original signatures to %%D...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r  > nul
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%%D" del /Q "%~dp0%projectFolder%\files_out\%%D"
@@ -461,7 +454,7 @@ echo  Any number of self-contained project folders can be created and worked wit
 echo  project folder can contain any number of apks ^& jars.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 390 in 
+echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 383 in 
 echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
