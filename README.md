@@ -27,9 +27,9 @@ SETUP
    with or you could just use a generic folder name if you're only working with user apps.
 
 3. Copy ALL of the framework apks from the rom you're working with into the 'frameworks'
-   folder of the project folder for the rom.
+   folder of the project folder.
 
 4. Copy all of the apks & jars from the rom you're working with into the 'files_in' folder 
-   of the project folder for the rom.
+   of the project folder.
 
 5. Use the menu to select tasks and execute them.
