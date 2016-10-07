@@ -444,10 +444,10 @@ echo  2. Create a project folder to work in - this could be named after the rom 
 echo     with or you could just use a generic folder name if you're only working with user apps.
 echo.
 echo  3. Copy ALL of the framework apks from the rom you're working with into the 'frameworks'
-echo     folder of the project folder for the rom.
+echo     folder of the project folder.
 echo.
 echo  4. Copy all of the apks ^& jars from the rom you're working with into the 'files_in' folder 
-echo     of the project folder for the rom.
+echo     of the project folder.
 echo.
 echo  5. Use the menu to select tasks and execute them.
 echo.
