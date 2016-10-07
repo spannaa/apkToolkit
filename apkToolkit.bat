@@ -337,7 +337,7 @@ echo   Compiling %%D ...
 if exist "%~dp0%projectFolder%\files_out\unsigned_%%D" del /Q "%~dp0%projectFolder%\files_out\unsigned_%%D"
 java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%%D" -o "%~dp0%projectFolder%\files_out\unsigned_%%D" > nul
 REM If errorlevel 1 occurs, show an error message and pause
-if errorlevel 1 (echo   There was an error compiling %%D - please Check Your log.txt
+if errorlevel 1 (echo   There was an error compiling %%D - please check your log.txt
 echo.
 echo - Press any key to continue...
 pause > nul
@@ -518,7 +518,7 @@ goto Pause
 
 :Level1Error
 echo.
-echo   An error Occured - please Check Your log.txt
+echo   An error Occured - please check your log.txt
 goto Pause
 
 :Pause
