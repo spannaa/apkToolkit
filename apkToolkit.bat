@@ -464,8 +464,9 @@ echo  To sign apks with your own release keys, replace the dummy cert.x509.pem a
 echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 390 in 
 echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
 echo.
-echo  The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, just rename 
-echo  one of the apktool_2.0.X.jar files in the 'tools' folder to 'apktool.jar'
+echo  The toolkit currently uses apktool_2.2.0.jar.
+echo  To switch to a different apktool_2.0.X.jar version, just copy it into the 'tools' folder
+echo  and rename it 'apktool.jar'
 echo.
 echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
