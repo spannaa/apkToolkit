@@ -190,7 +190,7 @@ goto Pause
 )
 if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
 echo.
-echo   Decompiling %currentApp% ...
+echo   Decompiling %currentApp%...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 )
@@ -216,13 +216,13 @@ echo.
 rmdir /S /Q %userprofile%\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
-echo   Installing framework: %%F ...
+echo   Installing framework: %%F...
 java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
 echo.
 if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
-echo   Decompiling %currentApp% ...
+echo   Decompiling %currentApp%...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 )
@@ -242,7 +242,7 @@ echo.
 rmdir /S /Q %userprofile%\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
-echo   Installing framework: %%F ...
+echo   Installing framework: %%F...
 java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
@@ -252,7 +252,7 @@ set /A count=0
 for %%F in (../%projectFolder%/files_in/*.apk ../%projectFolder%/files_in/*.jar) do (
 set /A count+=1
 if exist "%~dp0%projectFolder%\working\%%F" rmdir /S /Q "%~dp0%projectFolder%\working\%%F"
-echo   Decompiling %%F ...
+echo   Decompiling %%F...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%%F" -b -o "..\%projectFolder%\working\%%F" > nul
 if errorlevel 1 goto Level1Error
 )
@@ -279,7 +279,7 @@ echo.
 if not exist "%~dp0%projectFolder%\working\%currentApp%" goto NotDecompiledError
 REM If currentApp's build folder exists, delete it before compiling
 if exist "%~dp0%projectFolder%\working\%currentApp%\build" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%\build"
-echo   Compiling %currentApp% ...
+echo   Compiling %currentApp%...
 if exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%"
 java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%currentApp%" -o "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" > nul
 if errorlevel 1 goto Level1Error
@@ -294,8 +294,8 @@ goto Pause
 REM Signatures function
 :Signatures
 echo.
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > nul
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > NUL
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > NUL
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%currentApp%" del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
@@ -341,8 +341,8 @@ pause > nul
 ) else (
 REM Copy the original signatures to the compiled apks & jars...
 echo   Copying original signatures to %%D...
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r  > nul
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r  > NUL
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > NUL
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%%D" del /Q "%~dp0%projectFolder%\files_out\%%D"
