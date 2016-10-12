@@ -14,7 +14,7 @@ WHAT IT CAN DO
   - Decompile
   - Batch decompile
   - Compile 
-  - Batch compile keeping the original signatures
+  - Batch compile keeping the original signatures & manifest
   - Sign with test keys
   - Sign with release keys
   - Zipalign (after compiling & signing)
