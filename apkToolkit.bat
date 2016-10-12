@@ -2,13 +2,13 @@
 setlocal enabledelayedexpansion
 COLOR 1E
 if (%1)==(0) goto SkipMe
-echo ------------------------------------------------------------------------------ >> log.txt
+echo ------------------------------------------------------------------------------------ >> log.txt
 echo ^|%date% -- %time%^| >> log.txt
-echo ------------------------------------------------------------------------------ >> log.txt
+echo ------------------------------------------------------------------------------------ >> log.txt
 apkToolkit 0 2>> log.txt
 
 :SkipMe
-mode con:cols=94 lines=64
+mode con:cols=100 lines=72
 set compression=9
 set currentApp=None
 set heapy=512
@@ -39,12 +39,12 @@ echo   APK TOOLKIT
 echo.   
 echo   Spannaa @ XDA
 echo.
-echo  --------------------------------------------------------------------------------------------
+echo  --------------------------------------------------------------------------------------------------
 echo   Compression Level: %compression%   ^|  Java Heap Size: %heapy%mb
 echo.
 echo.
 echo   Current Project: %projectFolder%  ^|  Current App: %currentApp% 
-echo  --------------------------------------------------------------------------------------------
+echo  --------------------------------------------------------------------------------------------------
 echo.
 REM Check if there are any existing project folders and redirect to CreateProjectFolder if not
 set /A count=0
@@ -72,13 +72,13 @@ echo    6.  Batch decompile all apks ^& jars in a project folder
 echo.
 echo    7.  Compile an apk or jar
 echo.
-echo    8.  Batch compile all apks ^& jars in a project folder (keep original signatures)
+echo    8.  Batch compile all apks ^& jars in a project folder
 echo.
 echo    9.  Sign an apk with test keys
 echo.
 echo   10.  Sign an apk with release keys
 echo.
-echo   11.  Zipalign an apk (do after apk is compiled ^& signed)
+echo   11.  Zipalign an apk (after apk is compiled ^& signed)
 echo.
 echo   12.  Select compression level for apks ^& jars
 echo.
@@ -88,7 +88,7 @@ echo   14.  Setup, notes ^& credits
 echo.
 echo   15.  Quit
 echo.
-echo  --------------------------------------------------------------------------------------------
+echo  --------------------------------------------------------------------------------------------------
 echo.
 set /P menunr=- Please select your option: 
 if %menunr%==1 goto ProjectFolderSelect
@@ -202,7 +202,8 @@ java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" 
 if errorlevel 1 goto Level1Error
 )
 echo.
-echo   The decompiled %currentApp% can be found in your %projectFolder%\working folder
+echo   The decompiled %currentApp% 
+echo   can be found in your %projectFolder%\working folder
 goto Pause
 
 :DecompileSystemApk
@@ -234,7 +235,8 @@ java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" 
 if errorlevel 1 goto Level1Error
 )
 echo.
-echo   The decompiled %currentApp% can be found in your %projectFolder%\working folder
+echo   The decompiled %currentApp% 
+echo   can be found in your %projectFolder%\working folder
 goto Pause
 
 :DecompileAll
@@ -261,11 +263,16 @@ set /A count+=1
 if exist "%~dp0%projectFolder%\working\%%F" rmdir /S /Q "%~dp0%projectFolder%\working\%%F"
 echo   Decompiling %%F...
 java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%%F" -b -o "..\%projectFolder%\working\%%F" > nul
-if errorlevel 1 goto Level1Error
+if errorlevel 1 (echo   There was an error decompiling %%D - please check your log.txt
+echo.
+echo - Press any key to continue...
+pause > nul
+)
 )
 if %count%==0 goto NoAppsError
 echo.
-echo   All decompiled apks ^& jars can be found in your %projectFolder%\working folder
+echo   All decompiled apks ^& jars 
+echo   can be found in your %projectFolder%\working folder
 goto Pause
 
 :CompileApkOrJar
@@ -301,22 +308,31 @@ goto Pause
 REM Signatures function
 :Signatures
 echo.
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > NUL
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > NUL
+REM Copy the original META-INF folder to the compiled apks & jars...
+echo   Copying original META-INF folder to %currentApp%...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > nul
+REM If AndroidManifest.xml exists in the working folder, it's an apk not a jar
+if exist "%~dp0%projectFolder%\working\%currentApp%\AndroidManifest.xml" (
+REM Copy the original AndroidManifest.xml to the compiled apk
+echo   Copying original AndroidManifest.xml to %currentApp%...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" AndroidManifest.xml -r > nul
+)
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
+REM Delete projectFolder\working\temp
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%currentApp%" del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
 ren "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" "%currentApp%"
 echo.
-echo   The compiled %currentApp% with the original signatures 
+echo   The compiled %currentApp% with its original META-INF folder ^& AndroidManifest.xml
 echo   can be found in your %projectFolder%\files_out folder
 goto:eof
 
 REM NoSignatures function
 :NoSignatures
 echo.
-echo   The compiled, unsigned_%currentApp% can be 
-echo   found in your %projectFolder%\files_out folder
+echo   The compiled, unsigned_%currentApp% 
+echo   can be found in your %projectFolder%\files_out folder
 goto:eof
 
 :CompileAll
@@ -346,10 +362,17 @@ echo.
 echo - Press any key to continue...
 pause > nul
 ) else (
-REM Copy the original signatures to the compiled apks & jars...
-echo   Copying original signatures to %%D...
-7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r  > NUL
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > NUL
+REM Copy the original META-INF folders to the compiled apks & jars...
+echo   Copying original META-INF folder to %%D...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r > nul
+REM If AndroidManifest.xml exists in the working folder, it's an apk not a jar
+if exist "%~dp0%projectFolder%\working\%%D\AndroidManifest.xml" (
+REM Copy the original AndroidManifest.xmls to the compiled apks
+echo   Copying original AndroidManifest.xml to %%D...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" AndroidManifest.xml -r > nul
+)
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r > nul
+REM Delete projectFolder\working\temp
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
 if exist "%~dp0%projectFolder%\files_out\%%D" del /Q "%~dp0%projectFolder%\files_out\%%D"
@@ -358,7 +381,7 @@ ren "%~dp0%projectFolder%\files_out\unsigned_%%D" "%%D"
 )
 if %count%==0 goto NoneDecompiledError
 echo.
-echo   All compiled apks ^& jars with their original signatures 
+echo   All compiled apks ^& jars with their original META-INF folders ^& AndroidManifest.xml
 echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
@@ -375,7 +398,8 @@ if errorlevel 1 goto Level1Error
 )
 del /Q "%~dp0%projectFolder%\files_out\files_out\unsigned_%currentApp%"
 echo.
-echo   The test_signed_%currentApp% can be found in your %projectFolder%\files_out folder
+echo   The test_signed_%currentApp% 
+echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
 :SignApkRelease
@@ -386,13 +410,14 @@ REM Delete any existing unsigned currentApp before proceeding
 if exist "%~dp0%projectFolder%\files_out\release_signed_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\release_signed_%currentApp%"
 echo.
 echo   Signing %currentApp% with release keys
-REM rename cert.x509.pem and private.pk8 to reflect the filenames of your own release keys in the tools folder
+REM rename cert.x509.pem and private.pk8 to reflect the filenames of your own public & private release keys in the tools folder
 java -Xmx%heapy%m -jar signapk.jar -w cert.x509.pem private.pk8 ..\%projectFolder%\files_out\unsigned_%currentApp% ..\%projectFolder%\files_out\release_signed_%currentApp%
 if errorlevel 1 goto Level1Error
 )
 del /Q "%~dp0%projectFolder%\files_out\files_out\unsigned_%currentApp%"
 echo.
-echo   The release_signed_%currentApp% can be found in your %projectFolder%\files_out folder
+echo   The release_signed_%currentApp% 
+echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
 :ZipAlignApk
@@ -410,7 +435,8 @@ del /Q "%~dp0%projectFolder%\files_out\release_signed_%currentApp%"
 del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%"
 del /Q "%~dp0%projectFolder%\files_out\%currentApp%"
 echo.
-echo   The aligned %currentApp% can be found in your %projectFolder%\files_out folder
+echo   The aligned %currentApp% 
+echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
 :ClearFrameworks
@@ -434,7 +460,7 @@ goto ReStart
 cls
 echo.
 echo  APK TOOLKIT
-echo  --------------------------------------------------------------------------------------------
+echo  --------------------------------------------------------------------------------------------------
 echo.
 echo  SETUP
 echo.
@@ -460,9 +486,17 @@ echo.
 echo  Any number of self-contained project folders can be created and worked with and each 
 echo  project folder can contain any number of apks ^& jars.
 echo.
-echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and 
-echo  private.pk8 keys in the 'tools' folder  with your own and then edit line 390 in 
-echo  Apk_Jar_Manager.bat accordingly to reflect the filenames of your keys.
+echo  When you compile a single apk or jar, you are asked if it is a system app or not.
+echo   - If you select 'y', its original META-INF folder (^& AndroidManifest.xml if its an apk) 
+echo     are copied to the compiled apk.
+echo   - If you select 'n', nothing is copied to the compiled apk and it remains unsigned.
+echo.
+echo  When batch compiling all apks ^& jars in a project folder, their original META-INF folders  
+echo  (^& AndroidManifest.xmls for apks apk) are copied to the compiled apks.
+echo.
+echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
+echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
+echo  line 414 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.0.jar. To switch to a different version, copy any 
 echo  apktool_2.0.X.jar version into the 'tools' folder and rename it 'apktool.jar'
@@ -476,7 +510,7 @@ echo  apkToolkit is based on Apk Manager: Daneshm90 @ XDA
 echo  apktool.jar: iBotPeaches @ XDA & Brut.all @ XDA
 echo  7za standalone command line version of 7-Zip: Igor Pavlov
 echo.
-echo  --------------------------------------------------------------------------------------------
+echo  --------------------------------------------------------------------------------------------------
 goto Pause
 
 REM Error messages
@@ -487,7 +521,8 @@ goto Pause
 
 :NotDecompiledError
 echo.
-echo   %currentApp% has not been decompiled, please do so before doing attempting this
+echo   %currentApp% has not been decompiled. 
+echo   Please do so before doing attempting to compile it
 goto Pause
 
 :NoneDecompiledError
