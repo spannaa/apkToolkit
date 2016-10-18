@@ -221,7 +221,8 @@ echo   You need to select an apk or jar to work on first^^!
 goto Pause
 )
 echo.
-rmdir /S /Q %userprofile%\apktool > nul
+REM Delete any installed frameworks and install new one(s)
+rmdir /S /Q %userprofile%\AppData\Local\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
 echo   Installing framework: %%F...
@@ -248,7 +249,8 @@ echo   You need to select a project folder to work in first^^!
 goto Pause
 )
 echo.
-rmdir /S /Q %userprofile%\apktool > nul
+REM Delete any installed frameworks and install new one(s)
+rmdir /S /Q %userprofile%\AppData\Local\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
 echo   Installing framework: %%F...
@@ -439,11 +441,6 @@ echo   The aligned %currentApp%
 echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
-:ClearFrameworks
-echo   Clearing Frameworks...
-rmdir /S /Q %userprofile%\apktool > nul
-goto Pause
-
 :SetCompression
 set /P INPUT=- Enter Compression Level (0-9) : %=%
 set compression=%INPUT%
@@ -496,7 +493,7 @@ echo  (^& AndroidManifest.xmls for apks apk) are copied to the compiled apks.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
 echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
-echo  line 414 in apkToolkit.bat accordingly to reflect the filenames of your keys.
+echo  line 416 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.1.jar. To switch to a different version, copy any 
 echo  apktool_2.x.x.jar version into the 'tools' folder and rename it 'apktool.jar'
