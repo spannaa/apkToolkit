@@ -303,23 +303,32 @@ echo.
 echo   Is this a system apk ^(y/n^)
 echo.
 set /P INPUT=- Type input: %=%
-if %INPUT%==y (call :Signatures
-) else (call :NoSignatures)
-goto Pause
+if %INPUT%==n (goto NoSignatures)
 
 REM Signatures function
 :Signatures
 echo.
-REM Copy the original META-INF folder to the compiled apks & jars...
+echo   Apart from the signatures, would you like to copy over any additional files that you
+echo   didn't modify from the original apk in order to ensure least number of errors ^(y/n^)
+echo.
+set /P INPUT=- Type input: %=%
+if %INPUT%==y (goto SignaturesPlus)
+echo.
+REM Copy the original META-INF folder to the compiled apk/jar...
 echo   Copying original META-INF folder to %currentApp%...
 7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" META-INF -r  > nul
+REM If it exists, copy the original SEC-INF folder to the compiled apk
+if exist "%~dp0%projectFolder%\working\%currentApp%\SEC-INF" (
+echo   Copying original SEC-INF folder to %currentApp%...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" SEC-INF -r  > nul
+)
 REM If AndroidManifest.xml exists in the working folder, it's an apk not a jar
 if exist "%~dp0%projectFolder%\working\%currentApp%\AndroidManifest.xml" (
 REM Copy the original AndroidManifest.xml to the compiled apk
 echo   Copying original AndroidManifest.xml to %currentApp%...
 7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%currentApp%" AndroidManifest.xml -r > nul
 )
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%usrc% -r  > nul
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\working\temp\*" -mx%compression% -r  > nul
 REM Delete projectFolder\working\temp
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
@@ -328,14 +337,37 @@ ren "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" "%currentApp%"
 echo.
 echo   The compiled %currentApp% with its original META-INF folder ^& AndroidManifest.xml
 echo   can be found in your %projectFolder%\files_out folder
-goto:eof
+goto Pause
 
 REM NoSignatures function
 :NoSignatures
 echo.
 echo   The compiled, unsigned_%currentApp% 
 echo   can be found in your %projectFolder%\files_out folder
-goto:eof
+goto Pause
+
+REM SignaturesPlus function
+:SignaturesPlus
+echo.
+rmdir /S /Q "%~dp0%projectFolder%\keep"
+echo   Extracting original %currentApp%...
+echo.
+7za x -o"..\%projectFolder%\keep" "..\%projectFolder%\files_in\%currentApp%"  > nul
+echo   In the %projectFolder% folder you'll find a keep folder. Delete everything inside it
+echo   that you have modified and leave files that you haven't. If you have modified any 
+echo   xml files in the res/values folder, then delete resources.arsc from the keep folder too. 
+echo   Once done then press enter on this window.
+echo.
+echo - Press any key to continue...
+pause > nul
+echo.
+echo   Copying unmodified files from keep folder to unsigned_%currentApp%
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%currentApp%" "..\%projectFolder%\keep\*" -mx%compression% -r  > nul
+rmdir /S /Q "%~dp0%projectFolder%\keep"
+echo.
+echo   The compiled, unsigned_%currentApp% 
+echo   can be found in your %projectFolder%\files_out folder
+goto Pause
 
 :CompileAll
 cd tools
@@ -367,13 +399,18 @@ pause > nul
 REM Copy the original META-INF folders to the compiled apks & jars...
 echo   Copying original META-INF folder to %%D...
 7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" META-INF -r > nul
+REM If it exists, copy the original SEC-INF folder to the compiled apks
+if exist "%~dp0%projectFolder%\working\%%D\SEC-INF" (
+echo   Copying original SEC-INF folder to %%D...
+7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" SEC-INF -r  > nul
+)
 REM If AndroidManifest.xml exists in the working folder, it's an apk not a jar
 if exist "%~dp0%projectFolder%\working\%%D\AndroidManifest.xml" (
 REM Copy the original AndroidManifest.xmls to the compiled apks
 echo   Copying original AndroidManifest.xml to %%D...
 7za x -o"..\%projectFolder%\working\temp" "..\%projectFolder%\files_in\%%D" AndroidManifest.xml -r > nul
 )
-7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%usrc% -r > nul
+7za a -tzip "..\%projectFolder%\files_out\unsigned_%%D" "..\%projectFolder%\working\temp\*" -mx%compression% -r > nul
 REM Delete projectFolder\working\temp
 rmdir /S /Q "%~dp0%projectFolder%\working\temp"
 REM Delete existing file before renaming unsigned_file
@@ -484,16 +521,17 @@ echo  Any number of self-contained project folders can be created and worked wit
 echo  project folder can contain any number of apks ^& jars.
 echo.
 echo  When you compile a single apk or jar, you are asked if it is a system app or not.
-echo   - If you select 'y', its original META-INF folder (^& AndroidManifest.xml if its an apk) 
-echo     are copied to the compiled apk.
+echo   - If you select 'y', you can choose to either just copy its original META-INF folder 
+echo     (^& AndroidManifest.xml if its an apk) to the compiled apk or to choose which files
+echo     to copy over from a 'keep' folder.
 echo   - If you select 'n', nothing is copied to the compiled apk and it remains unsigned.
 echo.
 echo  When batch compiling all apks ^& jars in a project folder, their original META-INF folders  
-echo  (^& AndroidManifest.xmls for apks apk) are copied to the compiled apks.
+echo  (^& AndroidManifest.xmls for apks) are copied to the compiled apks.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
 echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
-echo  line 416 in apkToolkit.bat accordingly to reflect the filenames of your keys.
+echo  line 453 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.1.jar. To switch to a different version, copy any 
 echo  apktool_2.x.x.jar version into the 'tools' folder and rename it 'apktool.jar'
