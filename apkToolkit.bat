@@ -111,6 +111,8 @@ if %menunr%==0 goto OutOfRangeError
 if %menunr% GTR 15 goto OutOfRangeError
 
 :ProjectFolderSelect
+set projectFolder=None
+set currentApp=None
 echo.
 REM Check if there are any existing project folders and redirect to CreateProjectFolder if not
 set /A count=0
@@ -152,7 +154,12 @@ set /P INPUT=- Enter the folders name : %=%
 set projectFolder= %INPUT: =_%
 REM Create projectFolder and sub folders
 if not exist "%INPUT%" mkdir "%INPUT: =_%", "%INPUT: =_%\frameworks", "%INPUT: =_%\files_in", "%INPUT: =_%\files_out", "%INPUT: =_%\working"
-goto ReStart
+echo.
+echo   Project folder: %projectFolder% has been created
+echo.
+echo - Press any key to continue...
+pause > nul
+goto SkipMe
 
 :FileSelect
 echo.
@@ -531,7 +538,7 @@ echo  (^& AndroidManifest.xmls for apks) are copied to the compiled apks.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
 echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
-echo  line 453 in apkToolkit.bat accordingly to reflect the filenames of your keys.
+echo  line 460 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  The toolkit currently uses apktool_2.2.1.jar. To switch to a different version, copy any 
 echo  apktool_2.x.x.jar version into the 'tools' folder and rename it 'apktool.jar'
