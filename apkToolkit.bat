@@ -543,7 +543,7 @@ echo.
 echo  The toolkit currently uses apktool_2.2.4.jar. To switch to a different version, copy any 
 echo  apktool_2.x.x.jar version into the 'tools' folder and rename it 'apktool.jar'
 echo.
-echo  To to clone, build & update apktool in apkToolkit, run update_apkToolkit.bat
+echo  To to clone, build and update apktool in apkToolkit, run update_apkToolkit.bat
 echo.
 echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
