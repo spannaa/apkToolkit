@@ -7,7 +7,6 @@ copy "%~dp0\tools\7za.exe" "7za.exe" > nul
 7za e "brut.apktool\apktool-cli\build\libs\apktool-cli-all.jar" "apktool.properties" -r > nul
 for /f "tokens=*" %%a in ('find /i "application.version="^<apktool.properties') do set %%a
 copy "brut.apktool\apktool-cli\build\libs\apktool-cli-all.jar" "%~dp0\tools\apktool_%application.version%.jar" > nul
-del /s /q "%~dp0\tools\apktool.jar"
 copy  "%~dp0\tools\apktool_%application.version%.jar" "%~dp0\tools\apktool.jar" > nul
 cd %~dp0
 rd /q /s "Apktool"
