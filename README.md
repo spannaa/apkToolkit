@@ -33,3 +33,5 @@ SETUP
    of the project folder.
 
 5. Use the menu to select tasks and execute them.
+
+6. To clone, build and update apktool in apkToolkit, run update_apkToolkit.bat
