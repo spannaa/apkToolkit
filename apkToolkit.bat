@@ -11,6 +11,7 @@ apkToolkit 0 2>> log.txt
 mode con:cols=100 lines=72
 set compression=9
 set currentApp=None
+set apktool=apktool_2.2.4.jar
 set heapy=512
 set projectFolder=None
 java -version 
@@ -41,8 +42,9 @@ echo   Spannaa @ XDA
 echo.
 echo  --------------------------------------------------------------------------------------------------
 echo   Compression Level: %compression%   ^|  Java Heap Size: %heapy%mb
-echo.
-echo.
+echo  --------------------------------------------------------------------------------------------------
+echo   Current apktool version:  %apktool%
+echo  --------------------------------------------------------------------------------------------------
 echo   Current Project: %projectFolder%  ^|  Current App: %currentApp% 
 echo  --------------------------------------------------------------------------------------------------
 echo.
@@ -80,13 +82,15 @@ echo   10.  Sign an apk with release keys
 echo.
 echo   11.  Zipalign an apk (after apk is compiled ^& signed)
 echo.
-echo   12.  Select compression level for apks ^& jars
+echo   12.  Select version of apktool to work with
 echo.
-echo   13.  Set Max Memory Size (Only use if getting stuck at decompiling/compiling)
+echo   13.  Select compression level for apks ^& jars
 echo.
-echo   14.  Setup, notes ^& credits
+echo   14.  Set Max Memory Size (Only use if getting stuck at decompiling/compiling)
 echo.
-echo   15.  Quit
+echo   15.  Setup, notes ^& credits
+echo.
+echo   16.  Quit
 echo.
 echo  --------------------------------------------------------------------------------------------------
 echo.
@@ -102,13 +106,14 @@ if %menunr%==8 goto CompileAll
 if %menunr%==9 goto SignApkTest
 if %menunr%==10 goto SignApkRelease
 if %menunr%==11 goto ZipAlignApk
-if %menunr%==12 goto SetCompression
-if %menunr%==13 goto MaxMemorySize
-if %menunr%==14 goto Help
-if %menunr%==15 goto Quit
+if %menunr%==12 goto ApktoolSelect
+if %menunr%==13 goto SetCompression
+if %menunr%==14 goto MaxMemorySize
+if %menunr%==15 goto Help
+if %menunr%==16 goto Quit
 REM If an out of range number is entered, redirect to OutOfRangeError
 if %menunr%==0 goto OutOfRangeError
-if %menunr% GTR 15 goto OutOfRangeError
+if %menunr% GTR 16 goto OutOfRangeError
 
 :ProjectFolderSelect
 set projectFolder=None
@@ -205,7 +210,7 @@ goto Pause
 if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
 echo.
 echo   Decompiling %currentApp%...
-java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
+java -Xmx%heapy%m -jar %apktool% d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 )
 echo.
@@ -230,16 +235,17 @@ goto Pause
 echo.
 REM Delete any installed frameworks and install new one(s)
 rmdir /S /Q %userprofile%\AppData\Local\apktool > nul
+rmdir /S /Q %userprofile%\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
 echo   Installing framework: %%F...
-java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
+java -jar %apktool% if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
 echo.
 if exist "%~dp0%projectFolder%\working\%currentApp%" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%"
 echo   Decompiling %currentApp%...
-java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
+java -Xmx%heapy%m -jar %apktool% d "..\%projectFolder%\files_in\%currentApp%" -b -o "..\%projectFolder%\working\%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 )
 echo.
@@ -258,10 +264,11 @@ goto Pause
 echo.
 REM Delete any installed frameworks and install new one(s)
 rmdir /S /Q %userprofile%\AppData\Local\apktool > nul
+rmdir /S /Q %userprofile%\apktool > nul
 REM set /A count=0
 for %%F in (../%projectFolder%/frameworks/*.apk) do (
 echo   Installing framework: %%F...
-java -jar apktool.jar if ..\%projectFolder%\frameworks\%%F > nul
+java -jar %apktool% if ..\%projectFolder%\frameworks\%%F > nul
 if errorlevel 1 goto Level1Error
 )
 echo.
@@ -271,7 +278,7 @@ for %%F in (../%projectFolder%/files_in/*.apk ../%projectFolder%/files_in/*.jar)
 set /A count+=1
 if exist "%~dp0%projectFolder%\working\%%F" rmdir /S /Q "%~dp0%projectFolder%\working\%%F"
 echo   Decompiling %%F...
-java -Xmx%heapy%m -jar apktool.jar d "..\%projectFolder%\files_in\%%F" -b -o "..\%projectFolder%\working\%%F" > nul
+java -Xmx%heapy%m -jar %apktool% d "..\%projectFolder%\files_in\%%F" -b -o "..\%projectFolder%\working\%%F" > nul
 if errorlevel 1 (echo   There was an error decompiling %%D - please check your log.txt
 echo.
 echo - Press any key to continue...
@@ -304,7 +311,7 @@ REM If currentApp's build folder exists, delete it before compiling
 if exist "%~dp0%projectFolder%\working\%currentApp%\build" rmdir /S /Q "%~dp0%projectFolder%\working\%currentApp%\build"
 echo   Compiling %currentApp%...
 if exist "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" del /Q "%~dp0%projectFolder%\files_out\unsigned_%currentApp%"
-java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%currentApp%" -o "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" > nul
+java -Xmx%heapy%m -jar %apktool% b "..\%projectFolder%\working\%currentApp%" -o "%~dp0%projectFolder%\files_out\unsigned_%currentApp%" > nul
 if errorlevel 1 goto Level1Error
 echo.
 echo   Is this a system apk ^(y/n^)
@@ -396,7 +403,7 @@ REM Compile the apks & jars...
 echo.
 echo   Compiling %%D...
 if exist "%~dp0%projectFolder%\files_out\unsigned_%%D" del /Q "%~dp0%projectFolder%\files_out\unsigned_%%D"
-java -Xmx%heapy%m -jar apktool.jar b "..\%projectFolder%\working\%%D" -o "%~dp0%projectFolder%\files_out\unsigned_%%D" > nul
+java -Xmx%heapy%m -jar %apktool% b "..\%projectFolder%\working\%%D" -o "%~dp0%projectFolder%\files_out\unsigned_%%D" > nul
 REM If errorlevel 1 occurs, show an error message and pause
 if errorlevel 1 (echo   There was an error compiling %%D - please check your log.txt
 echo.
@@ -485,6 +492,25 @@ echo   The aligned %currentApp%
 echo   can be found in your %projectFolder%\files_out folder
 goto Pause
 
+:ApktoolSelect
+cls
+echo.
+echo   Select an apktool to work with...
+echo.
+set /A count=0
+for %%F in (tools/apktool_*.jar) do (
+set /A count+=1
+set a!count!=%%F
+if /I !count! LEQ 9 echo    !count!.  %%F 
+if /I !count! GTR 9 echo   !count!.  %%F 
+)
+echo.
+set /P INPUT=- Enter its number: %=%
+if /I %INPUT% GTR !count! goto ApktoolSelectError
+if /I %INPUT% LSS 1 goto ApktoolSelectError
+set apktool=!a%INPUT%!
+goto ReStart
+
 :SetCompression
 set /P INPUT=- Enter Compression Level (0-9) : %=%
 set compression=%INPUT%
@@ -513,8 +539,8 @@ echo.
 echo  3. Copy ALL of the framework apks from the rom you're working with into the 'frameworks'
 echo     folder of the project folder.
 echo.
-echo  4. Copy all of the apks ^& jars from the rom you're working with into the 'files_in' folder 
-echo     of the project folder.
+echo  4. Copy the apks ^& jars you want to decompile from the rom you're working with into the 
+echo     'files_in' folder of the project folder.
 echo.
 echo  5. Use the menu to select tasks and execute them.
 echo.
@@ -538,20 +564,26 @@ echo  (^& AndroidManifest.xmls for apks) are copied to the compiled apks.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
 echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
-echo  line 460 in apkToolkit.bat accordingly to reflect the filenames of your keys.
+echo  line 467 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
-echo  The toolkit currently uses apktool_2.2.4.jar. To switch to a different version, copy any 
-echo  apktool_2.x.x.jar version into the 'tools' folder and rename it 'apktool.jar'
+echo  New releases of apktool can be found at: https://ibotpeaches.github.io/Apktool/
+echo  To update apkToolkit, download the new apktool_x.x.x.jar, add it to the 'tools' folder 
+echo  and select it via option #12 in the apkToolkit menu.
 echo.
-echo  To to clone, build and update apktool in apkToolkit, run update_apkToolkit.bat
+echo  To build and add the latest snapshot version of apktool to apkToolkit (git MUST be installed) 
+echo  run build_apktool_snapshot.bat, wait for the build to complete and then select the newly built
+echo  snapshot via option #12 in the apkToolkit menu.
 echo.
-echo  The default compression level is '9', The default maximum memory (heap) size is '512'mb 
+echo  The default compression level is '9'.
+echo  The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
+echo.
+echo  Running Cleanup.bat after quitting will delete all installed frameworks and log.txt
 echo.
 echo  CREDITS
 echo.
 echo  apkToolkit is based on Apk Manager: Daneshm90 @ XDA
-echo  apktool.jar: iBotPeaches @ XDA & Brut.all @ XDA
+echo  apktool: iBotPeaches @ XDA ^& Brut.all @ XDA
 echo  7za standalone command line version of 7-Zip: Igor Pavlov
 echo.
 echo  --------------------------------------------------------------------------------------------------
@@ -587,6 +619,12 @@ goto Pause
 
 :FileSelectError
 set currentApp=None
+echo.
+echo   You selected a number that wasn't one of the options^^!
+goto Pause
+
+:ApktoolSelectError
+set apktool=apktool_2.2.4.jar
 echo.
 echo   You selected a number that wasn't one of the options^^!
 goto Pause
