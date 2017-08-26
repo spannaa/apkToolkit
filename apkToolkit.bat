@@ -531,7 +531,7 @@ echo  --------------------------------------------------------------------------
 echo.
 echo  SETUP
 echo.
-echo  1. Java MUST be installed for this tool to work. Java 7 (JRE 1.7) is recommended.
+echo  1. Java MUST be installed for this tool to work.
 echo.
 echo  2. Create a project folder to work in - this could be named after the rom you're working
 echo     with or you could just use a generic folder name if you're only working with user apps.
