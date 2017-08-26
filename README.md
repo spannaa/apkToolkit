@@ -18,10 +18,12 @@ WHAT IT CAN DO
   - Sign with test keys
   - Sign with release keys
   - Zipalign (after compiling & signing)
+  
+Running cleanup.bat after quitting will delete all installed frameworks and log.txt
 
 SETUP
 
-1. Java MUST be installed for this tool to work. Java 7 (JRE 1.7) is recommended.
+1. Java MUST be installed for this tool to work.
 
 2. Create a project folder to work in - this could be named after the rom you're working
    with or you could just use a generic folder name if you're only working with user apps.
@@ -29,9 +31,10 @@ SETUP
 3. Copy ALL of the framework apks from the rom you're working with into the 'frameworks'
    folder of the project folder.
 
-4. Copy all of the apks & jars from the rom you're working with into the 'files_in' folder 
-   of the project folder.
+4. Copy the apks & jars you want to decompile from the rom you're working with into the 
+   'files_in' folder of the project folder.
 
 5. Use the menu to select tasks and execute them.
 
-6. To clone, build and update apktool in apkToolkit, run update_apkToolkit.bat
+6. To build and add the latest snapshot version of apktool to apkToolkit (Git MUST be installed) 
+   run build_apktool_snapshot.bat
