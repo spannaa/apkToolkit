@@ -20,16 +20,16 @@ REM Check if there is only one project folder - if there is, set it as 'projectF
 set /A projectcount=0
 for /D %%D in (*) do if /I not "%%~nxD"=="tools" (
 set /A projectcount+=1
-set tmpstore1=%%~nD%%~xD
+set project=%%~nD%%~xD
 )
-if %projectcount%==1 set projectFolder=%tmpstore1%
+if %projectcount%==1 set projectFolder=%project%
 REM Check if there is only one apk/jar in the projectFolder\files_in folder - if there is, set it as 'currentApp'
 set /A filecount=0
 for %%F in (%projectFolder%/files_in/*.apk, %projectFolder%/files_in/*.jar) do (
 set /A filecount+=1
-set tmpstore2=%%~nF%%~xF
+set file=%%~nF%%~xF
 )
-if %filecount%==1 set currentApp=%tmpstore2%
+if %filecount%==1 set currentApp=%file%
 
 :ReStart
 cd "%~dp0"
@@ -120,35 +120,36 @@ set projectFolder=None
 set currentApp=None
 echo.
 REM Check if there are any existing project folders and redirect to CreateProjectFolder if not
-set /A count=0
+set /A projectcount=0
 for /D %%D in (*) do if /I not "%%~nxD"=="tools" (
-set /A count+=1
+set /A projectcount+=1
 )
-if %count%==0 (
+if %projectcount%==0 (
 echo   There are no existing project folders...
 goto CreateProjectFolder
 )
 echo   Select a project folder to work in...
 echo.
-set /A count=0
+set /A projectcount=0
 for /D %%D in (*) do if /I not "%%~nxD"=="tools" (
-set /A count+=1
-set a!count!=%%D
-if /I !count! LEQ 9 echo    !count!.  %%D
-if /I !count! GTR 9 echo   !count!.  %%D
+set /A projectcount+=1
+set a!projectcount!=%%D
+if /I !projectcount! LEQ 9 echo    !projectcount!.  %%D
+if /I !projectcount! GTR 9 echo   !projectcount!.  %%D
 )
 echo.
 set /P INPUT=- Enter its number: %=%
-if /I %INPUT% GTR !count! goto ProjectSelectError
+if /I %INPUT% GTR !projectcount! goto ProjectSelectError
 if /I %INPUT% LSS 1 goto ProjectSelectError
 set projectFolder=!a%INPUT%!
 REM Count the number of apps in projectFolder and, if there is only one, set it as currentApp
-set /A count=0
+set /A filecount=0
 for %%F in (!a%INPUT%!/files_in/*.apk, !a%INPUT%!/files_in/*.jar) do (
-set /A count+=1
-set a!count!=%%F
+set /A filecount+=1
+set a!filecount!=%%F
+set file=%%~nF%%~xF
 )
-if %count%==1 set currentApp=!a%INPUT%!
+if %filecount%==1 set currentApp=%file%
 goto ReStart
 
 :CreateProjectFolder
@@ -564,7 +565,7 @@ echo  (^& AndroidManifest.xmls for apks) are copied to the compiled apks.
 echo.
 echo  To sign apks with your own release keys, replace the dummy cert.x509.pem and private.pk8 
 echo  keys in the 'tools' folder  with your own public & private release keys and then edit 
-echo  line 467 in apkToolkit.bat accordingly to reflect the filenames of your keys.
+echo  line 468 in apkToolkit.bat accordingly to reflect the filenames of your keys.
 echo.
 echo  New releases of apktool can be found at: https://ibotpeaches.github.io/Apktool/
 echo  To update apkToolkit, download the new apktool_x.x.x.jar, add it to the 'tools' folder 
@@ -578,7 +579,7 @@ echo  The default compression level is '9'.
 echo  The default maximum memory (heap) size is '512'mb 
 echo  These should not need to be changed unless there is aproblem with decompiling/compiling.
 echo.
-echo  Running Cleanup.bat after quitting will delete all installed frameworks and log.txt
+echo  Running cleanup.bat after quitting will delete all installed frameworks and log.txt
 echo.
 echo  CREDITS
 echo.
