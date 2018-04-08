@@ -29,5 +29,3 @@ SETUP
 4. Copy the apks & jars you want to decompile from the rom you're working with into the 'files_in' folder of the project folder.
 
 5. Use the menu to select tasks and execute them.
-
-6. To build and add the latest snapshot version of apktool to apkToolkit (Git MUST be installed) run build_apktool_snapshot.bat
